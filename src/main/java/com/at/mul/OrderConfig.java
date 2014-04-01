@@ -1,7 +1,5 @@
 package com.at.mul;
 
-import java.util.Properties;
-
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,9 +44,9 @@ public class OrderConfig {
 		entityManager.setJpaVendorAdapter(jpaVendorAdapter);
 		entityManager.setPackagesToScan("com.at.mul.domain.order");
 		entityManager.setPersistenceUnitName("orderPersistenceUnit");
-		Properties properties = new Properties();
-		properties.put("javax.persistence.transactionType", "JTA");
-		entityManager.setJpaProperties(properties);
+//		Properties properties = new Properties();
+//		properties.put("javax.persistence.transactionType", "JTA");
+//		entityManager.setJpaProperties(properties);
 		return entityManager;
 	}
 
