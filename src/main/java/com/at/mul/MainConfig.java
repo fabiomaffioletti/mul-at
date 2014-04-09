@@ -11,6 +11,7 @@ import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.vendor.Database;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.jta.JtaTransactionManager;
 
 import com.atomikos.icatch.jta.UserTransactionImp;
@@ -18,6 +19,7 @@ import com.atomikos.icatch.jta.UserTransactionManager;
 
 @Configuration
 @ComponentScan
+@EnableTransactionManagement
 public class MainConfig {
 
 	@Bean
