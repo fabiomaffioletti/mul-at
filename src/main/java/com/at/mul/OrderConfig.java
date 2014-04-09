@@ -3,16 +3,21 @@ package com.at.mul;
 import javax.sql.DataSource;
 
 import org.h2.jdbcx.JdbcDataSource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.orm.jpa.JpaVendorAdapter;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 
 import com.atomikos.jdbc.AtomikosDataSourceBean;
 
 @Configuration
 @DependsOn("transactionManager")
 public class OrderConfig {
+	
+	@Autowired
+	private JpaVendorAdapter jpaVendorAdapter;
 
 	@Bean(name = "orderDataSource", initMethod = "init", destroyMethod = "close")
     public DataSource orderDataSource() {
@@ -25,9 +30,14 @@ public class OrderConfig {
         return xaDataSource;
     }
 	
-	@Bean(name = "orderJdbcTemplate")
-	public JdbcTemplate orderJdbcTemplate() {
-		return new JdbcTemplate(orderDataSource());
+	@Bean(name = "entityManagerFactoryB")
+	public LocalContainerEntityManagerFactoryBean entityManagerFactoryB() {
+		LocalContainerEntityManagerFactoryBean entityManager = new LocalContainerEntityManagerFactoryBean();
+		entityManager.setDataSource(orderDataSource());
+		entityManager.setJpaVendorAdapter(jpaVendorAdapter);
+		entityManager.setPersistenceUnitName("orderPersistenceUnit");
+		entityManager.setPersistenceXmlLocation("classpath*:persistence.xml");
+		return entityManager;
 	}
 
 }

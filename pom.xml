@@ -62,13 +62,28 @@
 
 		<dependency>
 			<groupId>org.springframework</groupId>
-			<artifactId>spring-jdbc</artifactId>
+			<artifactId>spring-orm</artifactId>
 		</dependency>
 
 		<dependency>
 			<groupId>javax.transaction</groupId>
 			<artifactId>jta</artifactId>
 			<version>1.1</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-entitymanager</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>cglib</groupId>
+					<artifactId>cglib</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>dom4j</groupId>
+					<artifactId>dom4j</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<dependency>
@@ -96,8 +111,20 @@
 		
 		<dependency>
 			<groupId>com.atomikos</groupId>
-			<artifactId>transactions-jdbc</artifactId>
+			<artifactId>transactions-hibernate3</artifactId>
 			<version>3.9.3</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>hibernate</artifactId>
+					<groupId>org.hibernate</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		
+		<dependency>
+			<groupId>dom4j</groupId>
+			<artifactId>dom4j</artifactId>
+			<version>1.6.1</version>
 		</dependency>
 
 		<dependency>

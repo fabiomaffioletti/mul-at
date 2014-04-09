@@ -1,27 +1,30 @@
 package com.at.mul.repository.customer;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
+import java.util.List;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 import org.springframework.stereotype.Repository;
 
 import com.at.mul.domain.customer.Customer;
-import com.at.mul.mapper.CustomerRowMapper;
 
 @Repository
 public class CustomerRepositoryImpl implements CustomerRepository {
 	
-	@Autowired
-	private JdbcTemplate customerJdbcTemplate;
+	@PersistenceContext(unitName = "customerPersistenceUnit")
+	private EntityManager entityManager;
 
 	@Override
 	public Customer save(Customer customer) {
-		customerJdbcTemplate.update("INSERT INTO customer (name, age) VALUES (?, ?)", customer.getName(), customer.getAge());
-		return getByName(customer.getName());
+		entityManager.persist(customer);
+		return customer;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public Customer getByName(String name) {
-		return customerJdbcTemplate.queryForObject("SELECT * FROM customer WHERE name = '" + name + "'", new CustomerRowMapper());
+	public List<Customer> findAll() {
+		return entityManager.createQuery("select c from Customer c").getResultList();
 	}
 
 }

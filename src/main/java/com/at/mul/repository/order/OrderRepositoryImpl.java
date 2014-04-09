@@ -1,27 +1,30 @@
 package com.at.mul.repository.order;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
+import java.util.List;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 import org.springframework.stereotype.Repository;
 
 import com.at.mul.domain.order.Order;
-import com.at.mul.mapper.OrderRowMapper;
 
 @Repository
 public class OrderRepositoryImpl implements OrderRepository {
-	
-	@Autowired
-	private JdbcTemplate orderJdbcTemplate;
+
+	@PersistenceContext(unitName = "orderPersistenceUnit")
+	private EntityManager entityManager;
 
 	@Override
 	public Order save(Order order) {
-		orderJdbcTemplate.update("INSERT INTO orders (code, quantity) VALUES (?, ?)", order.getCode(), order.getQuantity());
-		return getByCode(order.getCode());
+		entityManager.persist(order);
+		return order;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public Order getByCode(Integer code) {
-		return orderJdbcTemplate.queryForObject("SELECT * FROM orders WHERE code = " + code, new OrderRowMapper());
+	public List<Order> findAll() {
+		return entityManager.createQuery("select c from Order c").getResultList();
 	}
 
 }

@@ -7,6 +7,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
+import org.springframework.orm.jpa.JpaVendorAdapter;
+import org.springframework.orm.jpa.vendor.Database;
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.jta.JtaTransactionManager;
@@ -18,6 +21,15 @@ import com.atomikos.icatch.jta.UserTransactionManager;
 @ComponentScan
 @EnableTransactionManagement
 public class MainConfig {
+	
+	@Bean
+	public JpaVendorAdapter jpaVendorAdapter() {
+		HibernateJpaVendorAdapter hibernateJpaVendorAdapter = new HibernateJpaVendorAdapter();
+		hibernateJpaVendorAdapter.setShowSql(true);
+		hibernateJpaVendorAdapter.setGenerateDdl(true);
+		hibernateJpaVendorAdapter.setDatabase(Database.H2);
+		return hibernateJpaVendorAdapter;
+	}
 
 	@Bean(name = "userTransaction")
 	public UserTransaction userTransaction() throws Throwable {
