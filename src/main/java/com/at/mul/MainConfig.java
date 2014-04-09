@@ -42,6 +42,9 @@ public class MainConfig {
 	public TransactionManager atomikosTransactionManager() throws Throwable {
 		UserTransactionManager userTransactionManager = new UserTransactionManager();
 		userTransactionManager.setForceShutdown(false);
+
+		AtomikosJtaPlatform.transactionManager = userTransactionManager;
+
 		return userTransactionManager;
 	}
 
@@ -49,6 +52,9 @@ public class MainConfig {
 	@DependsOn({ "userTransaction", "atomikosTransactionManager" })
 	public PlatformTransactionManager transactionManager() throws Throwable {
 		UserTransaction userTransaction = userTransaction();
+
+		AtomikosJtaPlatform.transaction = userTransaction;
+
 		TransactionManager atomikosTransactionManager = atomikosTransactionManager();
 		return new JtaTransactionManager(userTransaction, atomikosTransactionManager);
 	}

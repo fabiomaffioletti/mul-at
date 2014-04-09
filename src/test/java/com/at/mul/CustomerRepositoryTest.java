@@ -19,8 +19,7 @@ import com.at.mul.repository.customer.CustomerRepository;
 @TransactionConfiguration(transactionManager = "transactionManager")
 public class CustomerRepositoryTest {
 
-	@Autowired
-	private CustomerRepository customerRepository;
+	@Autowired private CustomerRepository customerRepository;
 
 	@Test
 	public void testCustomerConfig() {

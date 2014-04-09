@@ -18,6 +18,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<hibernate-entitymanager.version>4.3.5.Final</hibernate-entitymanager.version>
 	</properties>
 
 	<build>
