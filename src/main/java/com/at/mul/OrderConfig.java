@@ -1,5 +1,7 @@
 package com.at.mul;
 
+import java.util.HashMap;
+
 import javax.sql.DataSource;
 
 import org.h2.jdbcx.JdbcDataSource;
@@ -35,11 +37,17 @@ public class OrderConfig {
 
 	@Bean(name = "orderEntityManager")
 	public LocalContainerEntityManagerFactoryBean orderEntityManager() throws Throwable {
+		
+		HashMap<String, Object> properties = new HashMap<String, Object>();
+		properties.put("hibernate.transaction.jta.platform", AtomikosJtaPlatform.class.getName());
+		properties.put("javax.persistence.transactionType", "JTA");
+		
 		LocalContainerEntityManagerFactoryBean entityManager = new LocalContainerEntityManagerFactoryBean();
 		entityManager.setDataSource(orderDataSource());
 		entityManager.setJpaVendorAdapter(jpaVendorAdapter);
 		entityManager.setPackagesToScan("com.at.mul.domain.order");
 		entityManager.setPersistenceUnitName("orderPersistenceUnit");
+		entityManager.setJpaPropertyMap(properties);
 		return entityManager;
 	}
 

@@ -36,6 +36,7 @@ public class CustomerRepositoryTest {
 		c.setAge(30);
 		Customer cust = customerRepository.save(c);
 		Assert.assertNotNull(cust.getId());
+		System.out.println(cust);
 	}
 
 }
