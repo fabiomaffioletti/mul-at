@@ -4,7 +4,6 @@ import java.util.HashMap;
 
 import javax.sql.DataSource;
 
-import org.h2.jdbcx.JdbcDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -16,6 +15,7 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 
 import com.at.mul.repository.order.OrderDatasourceProperties;
 import com.atomikos.jdbc.AtomikosDataSourceBean;
+import com.mysql.jdbc.jdbc2.optional.MysqlXADataSource;
 
 @Configuration
 @DependsOn("transactionManager")
@@ -31,13 +31,17 @@ public class OrderConfig {
 
 	@Bean(name = "orderDataSource", initMethod = "init", destroyMethod = "close")
 	public DataSource orderDataSource() {
-		JdbcDataSource h2XaDataSource = new JdbcDataSource();
-		h2XaDataSource.setURL(orderDatasourceProperties.getUrl());
-
-		AtomikosDataSourceBean xaDataSource = new AtomikosDataSourceBean();
-		xaDataSource.setXaDataSource(h2XaDataSource);
-		xaDataSource.setUniqueResourceName("xads2");
-		return xaDataSource;
+		 MysqlXADataSource mysqlXaDataSource = new MysqlXADataSource();
+		 mysqlXaDataSource.setUrl(orderDatasourceProperties.getUrl());
+		 mysqlXaDataSource.setPinGlobalTxToPhysicalConnection(true);
+		 mysqlXaDataSource.setPassword(orderDatasourceProperties.getPassword());
+		 mysqlXaDataSource.setUser(orderDatasourceProperties.getUsername());
+		 mysqlXaDataSource.setPinGlobalTxToPhysicalConnection(true);
+		
+		 AtomikosDataSourceBean xaDataSource = new AtomikosDataSourceBean();
+		 xaDataSource.setXaDataSource(mysqlXaDataSource);
+		 xaDataSource.setUniqueResourceName("xads2");
+		 return xaDataSource;
 	}
 
 	@Bean(name = "orderEntityManager")
