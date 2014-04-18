@@ -32,24 +32,12 @@ public class CustomerConfig {
 	@Bean(name = "customerDataSource", initMethod = "init", destroyMethod = "close")
 	public DataSource customerDataSource() {
 		JdbcDataSource h2XaDataSource = new JdbcDataSource();
-		h2XaDataSource.setURL("jdbc:h2:customer");
+		h2XaDataSource.setURL(customerDatasourceProperties.getUrl());
 
 		AtomikosDataSourceBean xaDataSource = new AtomikosDataSourceBean();
 		xaDataSource.setXaDataSource(h2XaDataSource);
 		xaDataSource.setUniqueResourceName("xads1");
 		return xaDataSource;
-
-		// MysqlXADataSource mysqlXaDataSource = new MysqlXADataSource();
-		// mysqlXaDataSource.setUrl(customerDatasourceProperties.getUrl());
-		// mysqlXaDataSource.setPinGlobalTxToPhysicalConnection(true);
-		// mysqlXaDataSource.setPassword(customerDatasourceProperties.getPassword());
-		// mysqlXaDataSource.setUser(customerDatasourceProperties.getUsername());
-		// mysqlXaDataSource.setPinGlobalTxToPhysicalConnection(true);
-		//
-		// AtomikosDataSourceBean xaDataSource = new AtomikosDataSourceBean();
-		// xaDataSource.setXaDataSource(mysqlXaDataSource);
-		// xaDataSource.setUniqueResourceName("xads1");
-		// return xaDataSource;
 	}
 
 	@Bean(name = "customerEntityManager")
