@@ -19,7 +19,8 @@ import com.at.mul.repository.customer.CustomerRepository;
 @TransactionConfiguration(transactionManager = "transactionManager")
 public class CustomerRepositoryTest {
 
-	@Autowired private CustomerRepository customerRepository;
+	@Autowired
+	private CustomerRepository customerRepository;
 
 	@Test
 	public void testCustomerConfig() {
@@ -28,15 +29,11 @@ public class CustomerRepositoryTest {
 
 	@Test
 	public void save() {
-		System.out.println("###############################################################");
-		System.out.println("###############################################################");
-		System.out.println("###############################################################");
 		Customer c = new Customer();
 		c.setName("test-name");
 		c.setAge(30);
 		Customer cust = customerRepository.save(c);
 		Assert.assertNotNull(cust.getId());
-		System.out.println(cust);
 	}
 
 }

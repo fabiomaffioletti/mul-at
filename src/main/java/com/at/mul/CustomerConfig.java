@@ -6,6 +6,7 @@ import javax.sql.DataSource;
 
 import org.h2.jdbcx.JdbcDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
@@ -13,15 +14,20 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 
+import com.at.mul.repository.customer.CustomerDatasourceProperties;
 import com.atomikos.jdbc.AtomikosDataSourceBean;
 
 @Configuration
 @DependsOn("transactionManager")
-@EnableJpaRepositories(basePackages = "com.at.mul.repository.customer",
-		entityManagerFactoryRef = "customerEntityManager", transactionManagerRef = "transactionManager")
+@EnableJpaRepositories(basePackages = "com.at.mul.repository.customer", entityManagerFactoryRef = "customerEntityManager", transactionManagerRef = "transactionManager")
+@EnableConfigurationProperties(CustomerDatasourceProperties.class)
 public class CustomerConfig {
 
-	@Autowired private JpaVendorAdapter jpaVendorAdapter;
+	@Autowired
+	private JpaVendorAdapter jpaVendorAdapter;
+
+	@Autowired
+	private CustomerDatasourceProperties customerDatasourceProperties;
 
 	@Bean(name = "customerDataSource", initMethod = "init", destroyMethod = "close")
 	public DataSource customerDataSource() {
@@ -32,6 +38,18 @@ public class CustomerConfig {
 		xaDataSource.setXaDataSource(h2XaDataSource);
 		xaDataSource.setUniqueResourceName("xads1");
 		return xaDataSource;
+
+		// MysqlXADataSource mysqlXaDataSource = new MysqlXADataSource();
+		// mysqlXaDataSource.setUrl(customerDatasourceProperties.getUrl());
+		// mysqlXaDataSource.setPinGlobalTxToPhysicalConnection(true);
+		// mysqlXaDataSource.setPassword(customerDatasourceProperties.getPassword());
+		// mysqlXaDataSource.setUser(customerDatasourceProperties.getUsername());
+		// mysqlXaDataSource.setPinGlobalTxToPhysicalConnection(true);
+		//
+		// AtomikosDataSourceBean xaDataSource = new AtomikosDataSourceBean();
+		// xaDataSource.setXaDataSource(mysqlXaDataSource);
+		// xaDataSource.setUniqueResourceName("xads1");
+		// return xaDataSource;
 	}
 
 	@Bean(name = "customerEntityManager")
@@ -43,7 +61,7 @@ public class CustomerConfig {
 		properties.put("javax.persistence.transactionType", "JTA");
 
 		LocalContainerEntityManagerFactoryBean entityManager = new LocalContainerEntityManagerFactoryBean();
-		entityManager.setDataSource(customerDataSource());
+		entityManager.setJtaDataSource(customerDataSource());
 		entityManager.setJpaVendorAdapter(jpaVendorAdapter);
 		entityManager.setPackagesToScan("com.at.mul.domain.customer");
 		entityManager.setPersistenceUnitName("customerPersistenceUnit");
